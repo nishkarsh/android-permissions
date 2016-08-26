@@ -1,0 +1,5 @@
+<resources>
+  <string name="app_name">Android Dynamic Permissions</string>
+  <string name="message_permission_required">App needs permission for some features to work properly</string>
+  <string name="title_permission_required">Permission required</string>
+</resources>
