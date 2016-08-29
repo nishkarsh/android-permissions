@@ -2,7 +2,7 @@ package com.intentfilter.androidpermissions;
 
 import android.util.Log;
 
-public class Logger {
+class Logger {
     private String LOG_TAG;
 
     private Logger(Class clazz) {
@@ -13,12 +13,6 @@ public class Logger {
         return new Logger(clazz);
     }
 
-    public void d(String message) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, message);
-        }
-    }
-
     public void i(String message) {
         if (BuildConfig.DEBUG) {
             Log.i(LOG_TAG, message);
@@ -27,9 +21,5 @@ public class Logger {
 
     public void e(String message) {
         Log.e(LOG_TAG, message);
-    }
-
-    public void e(String message, Throwable throwable) {
-        Log.e(LOG_TAG, message, throwable);
     }
 }

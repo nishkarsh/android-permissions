@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 
-public class PermissionHandler {
+class PermissionHandler {
     private Logger logger;
     private PermissionManager manager;
     private final AppStatus appStatus;

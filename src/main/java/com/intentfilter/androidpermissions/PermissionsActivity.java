@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 
-class PermissionsActivity extends AppCompatActivity {
+public class PermissionsActivity extends AppCompatActivity {
 
     static final int PERMISSIONS_REQUEST_CODE = 100;
     static final String EXTRA_PERMISSIONS_GRANTED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_GRANTED";
