@@ -25,6 +25,6 @@ public class BroadcastService {
     }
 
     public interface IntentAction {
-        String ACTION_PERMISSIONS_REQUEST = BuildConfig.APPLICATION_ID + ".PERMISSIONS_REQUEST";
+        String ACTION_PERMISSIONS_REQUEST = "com.intentfilter.androidpermissions.PERMISSIONS_REQUEST";
     }
 }
