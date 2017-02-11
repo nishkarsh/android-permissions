@@ -1,4 +1,4 @@
-# android-permissions
+# android-permissions [ ![Download](https://api.bintray.com/packages/nishkarsh/maven/com.intentfilter%3Aandroid-permissions/images/download.svg) ](https://bintray.com/nishkarsh/maven/com.intentfilter%3Aandroid-permissions/_latestVersion) [![Build Status](https://travis-ci.org/nishkarsh/android-permissions.svg?branch=master)](https://travis-ci.org/nishkarsh/android-permissions)
 An android library that makes it really easy to deal with dynamic permissions. Based on the context, library automatically decides whether to show a dialog (in case app is in foreground) or a notification (in case permission is required by a background service).
 
 ### How does it work?
@@ -27,13 +27,13 @@ permissionManager.checkPermissions(singleton(Manifest.permission.CAMERA), new Pe
 
 ### Including into project
 
-Gradle: `compile 'com.intentfilter:android-permissions:0.1.0-alpha'`
+Gradle: `compile 'com.intentfilter:android-permissions:0.1.2'`
 
 Add as android-permissions as dependency inside app module level build.gradle under dependencies block. Your app level build.gradle should look like:
 
 ```
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.intentfilter:android-permissions:0.1.0-alpha'
+    compile 'com.intentfilter:android-permissions:0.1.2'
 }
 ```
