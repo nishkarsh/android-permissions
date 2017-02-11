@@ -4,6 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.intentfilter.androidpermissions.helpers.AppStatus;
+import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.services.BroadcastService;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,17 +23,18 @@ class PermissionHandler {
     private HashMap<PermissionManager.PermissionRequestListener, Set> requiredPermissionsMap = new HashMap<>();
     private Set<String> pendingPermissionRequests = new HashSet<>();
 
-    public PermissionHandler(PermissionManager manager, Context context) {
+    PermissionHandler(PermissionManager manager, Context context) {
         this(new AppStatus(context), Logger.loggerFor(PermissionHandler.class), manager);
     }
 
-    public PermissionHandler(AppStatus appStatus, Logger logger, PermissionManager manager) {
+    @VisibleForTesting
+    PermissionHandler(AppStatus appStatus, Logger logger, PermissionManager manager) {
         this.logger = logger;
         this.manager = manager;
         this.appStatus = appStatus;
     }
 
-    public void checkPermissions(Collection<String> permissions, PermissionManager.PermissionRequestListener listener) {
+    void checkPermissions(Collection<String> permissions, PermissionManager.PermissionRequestListener listener) {
         Set<String> permissionsToRequest = filterGrantedPermissions(permissions);
 
         if (permissionsToRequest.isEmpty()) {
@@ -44,7 +49,7 @@ class PermissionHandler {
         }
     }
 
-    public void onPermissionsResult(String[] grantedPermissions, String[] deniedPermissions) {
+    void onPermissionsResult(String[] grantedPermissions, String[] deniedPermissions) {
         informPermissionsDenied(deniedPermissions);
         informPermissionsGranted(grantedPermissions);
 

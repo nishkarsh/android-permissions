@@ -1,4 +1,4 @@
-package com.intentfilter.androidpermissions;
+package com.intentfilter.androidpermissions.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,7 +19,7 @@ public class NotificationService {
         this(context, (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE));
     }
 
-    public NotificationService(Context context, NotificationManager notificationManager) {
+    private NotificationService(Context context, NotificationManager notificationManager) {
         this.context = context;
         this.notificationManager = notificationManager;
     }

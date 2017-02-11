@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.services.BroadcastService;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,8 +19,8 @@ import static java.util.Arrays.asList;
 public class PermissionsActivity extends AppCompatActivity {
 
     static final int PERMISSIONS_REQUEST_CODE = 100;
-    static final String EXTRA_PERMISSIONS_GRANTED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_GRANTED";
-    static final String EXTRA_PERMISSIONS_DENIED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_DENIED";
+    public static final String EXTRA_PERMISSIONS_GRANTED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_GRANTED";
+    public static final String EXTRA_PERMISSIONS_DENIED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_DENIED";
     static final String EXTRA_PERMISSIONS = BuildConfig.APPLICATION_ID + ".PERMISSIONS";
     static final Logger logger = Logger.loggerFor(PermissionsActivity.class);
 

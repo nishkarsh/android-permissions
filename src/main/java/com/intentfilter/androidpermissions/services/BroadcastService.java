@@ -1,4 +1,4 @@
-package com.intentfilter.androidpermissions;
+package com.intentfilter.androidpermissions.services;
 
 import android.content.Context;
 import android.content.Intent;

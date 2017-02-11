@@ -1,6 +1,9 @@
 package com.intentfilter.androidpermissions;
 
 import com.intentfilter.androidpermissions.PermissionManager.PermissionRequestListener;
+import com.intentfilter.androidpermissions.helpers.AppStatus;
+import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.services.NotificationService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +15,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.intentfilter.androidpermissions.BroadcastService.IntentAction.ACTION_PERMISSIONS_REQUEST;
+import static com.intentfilter.androidpermissions.services.BroadcastService.IntentAction.ACTION_PERMISSIONS_REQUEST;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anySet;
+import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -40,9 +43,9 @@ public class PermissionHandlerTest {
     private Logger logger;
 
     private PermissionHandler permissionHandler;
-    public static final String PERMISSION_1 = "permission1";
-    public static final String PERMISSION_2 = "permission2";
-    public static final String PERMISSION_3 = "permission3";
+    private static final String PERMISSION_1 = "permission1";
+    private static final String PERMISSION_2 = "permission2";
+    private static final String PERMISSION_3 = "permission3";
 
     @Before
     public void setUp() throws Exception {
@@ -68,8 +71,8 @@ public class PermissionHandlerTest {
 
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
-        verify(manager, never()).showPermissionNotification(anySet(), anyInt(), anyInt());
-        verify(manager, never()).startPermissionActivity(anySet());
+        verify(manager, never()).showPermissionNotification(anySetOf(String.class), anyInt(), anyInt());
+        verify(manager, never()).startPermissionActivity(anySetOf(String.class));
     }
 
     @Test
@@ -125,7 +128,7 @@ public class PermissionHandlerTest {
         permissionHandler.checkPermissions(permissions, requestListener);
 
         verify(manager).startPermissionActivity(new HashSet<>(permissions));
-        verify(manager, never()).showPermissionNotification(anySet(), anyInt(), anyInt());
+        verify(manager, never()).showPermissionNotification(anySetOf(String.class), anyInt(), anyInt());
     }
 
     @Test
@@ -136,7 +139,7 @@ public class PermissionHandlerTest {
         permissionHandler.checkPermissions(permissions, requestListener);
 
         verify(manager).showPermissionNotification(new HashSet<>(permissions), R.string.title_permission_required, R.string.message_permission_required);
-        verify(manager, never()).startPermissionActivity(anySet());
+        verify(manager, never()).startPermissionActivity(anySetOf(String.class));
     }
 
     @Test

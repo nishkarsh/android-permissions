@@ -4,12 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.intentfilter.androidpermissions.helpers.AppStatus;
+import com.intentfilter.androidpermissions.helpers.Logger;
+
 import java.util.Arrays;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static java.util.Arrays.asList;
 
-class NotificationDismissReceiver extends BroadcastReceiver {
+public class NotificationDismissReceiver extends BroadcastReceiver {
 
     private static final Logger logger = Logger.loggerFor(NotificationDismissReceiver.class);
 

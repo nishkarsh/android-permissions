@@ -1,8 +1,10 @@
-package com.intentfilter.androidpermissions;
+package com.intentfilter.androidpermissions.helpers;
 
 import android.util.Log;
 
-class Logger {
+import com.intentfilter.androidpermissions.BuildConfig;
+
+public class Logger {
     private String LOG_TAG;
 
     private Logger(Class clazz) {
