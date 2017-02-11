@@ -6,6 +6,8 @@ android:
     - build-tools-24.0.3
     - android-25
     - extra-android-m2repository
+jdk:
+  - oraclejdk8
 
 script:
   - ./gradlew build
