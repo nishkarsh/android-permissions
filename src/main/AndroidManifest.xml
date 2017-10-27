@@ -8,7 +8,6 @@
 
     <activity
         android:name=".PermissionsActivity"
-        android:screenOrientation="portrait"
         android:excludeFromRecents="true"
         android:theme="@style/AppTheme.Transparent" />
 
