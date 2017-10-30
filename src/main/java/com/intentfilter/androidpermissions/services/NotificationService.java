@@ -12,6 +12,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationService {
 
+    private static final String CHANNEL_ID = "android-permissions";
     private final Context context;
     private final NotificationManager notificationManager;
 
@@ -27,7 +28,7 @@ public class NotificationService {
     public Notification buildNotification(String title, String message, Intent intent, PendingIntent deleteIntent) {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent, FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)

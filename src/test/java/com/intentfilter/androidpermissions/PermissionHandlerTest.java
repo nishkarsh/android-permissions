@@ -32,8 +32,6 @@ import static org.mockito.Mockito.when;
 public class PermissionHandlerTest {
 
     @Mock
-    private NotificationService notificationService;
-    @Mock
     private AppStatus appStatus;
     @Mock
     private PermissionManager manager;
