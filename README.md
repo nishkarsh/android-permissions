@@ -27,13 +27,13 @@ permissionManager.checkPermissions(singleton(Manifest.permission.CAMERA), new Pe
 
 ### Including into project
 
-Gradle: `compile 'com.intentfilter:android-permissions:0.1.2'`
+Gradle: `implementation 'com.intentfilter:android-permissions:0.1.5'`
 
 Add as android-permissions as dependency inside app module level build.gradle under dependencies block. Your app level build.gradle should look like:
 
 ```
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.intentfilter:android-permissions:0.1.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.intentfilter:android-permissions:0.1.5'
 }
 ```
