@@ -74,7 +74,6 @@ class PermissionHandler {
         }
     }
 
-    @VisibleForTesting
     void invalidatePendingPermissionRequests(Collection<String> permissions) {
         pendingPermissionRequests.removeAll(permissions);
         informPermissionsDenied(permissions.toArray(new String[permissions.size()]));
