@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
+import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS;
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_DENIED;
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_GRANTED;
 
@@ -72,10 +72,10 @@ public class PermissionManager extends BroadcastReceiver {
 
     @NonNull
     private Intent permissionActivityIntent(Set<String> permissions) {
-        Intent intent = new Intent(context, PermissionsActivity.class);
-        intent.putExtra(PermissionsActivity.EXTRA_PERMISSIONS, permissions.toArray(new String[permissions.size()]));
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        return intent;
+        return new Intent(context, PermissionsActivity.class)
+                .putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[permissions.size()]))
+                .setAction(permissions.toString())
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     boolean permissionAlreadyGranted(String permission) {
@@ -99,7 +99,7 @@ public class PermissionManager extends BroadcastReceiver {
     @NonNull
     private PendingIntent notificationDismissIntent(Set<String> permissions) {
         Intent notificationDeleteIntent = new Intent(context, NotificationDismissReceiver.class);
-        notificationDeleteIntent.putExtra(PermissionsActivity.EXTRA_PERMISSIONS, permissions.toArray(new String[permissions.size()]));
+        notificationDeleteIntent.putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[permissions.size()]));
         return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE, notificationDeleteIntent, FLAG_ONE_SHOT);
     }
 
