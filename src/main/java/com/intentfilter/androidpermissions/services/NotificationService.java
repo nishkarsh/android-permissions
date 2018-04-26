@@ -39,11 +39,18 @@ public class NotificationService {
     public Notification buildNotification(String title, String message, Intent intent, PendingIntent deleteIntent) {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent, FLAG_ONE_SHOT);
 
+        int iconResourceId = context.getResources().getIdentifier(
+                "ic_launcher", "mipmap", context.getPackageName());
+
+        if (iconResourceId == 0) {
+            iconResourceId = android.R.mipmap.sym_def_app_icon;
+        }
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
-                .setSmallIcon(android.R.mipmap.sym_def_app_icon)
+                .setSmallIcon(iconResourceId)
                 .setContentIntent(pendingIntent);
 
         notificationBuilder.setDeleteIntent(deleteIntent);
