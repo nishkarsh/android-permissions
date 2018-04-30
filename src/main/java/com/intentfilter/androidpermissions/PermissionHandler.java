@@ -49,12 +49,14 @@ class PermissionHandler {
         }
     }
 
-    void onPermissionsResult(String[] grantedPermissions, String[] deniedPermissions) {
+    void onPermissionsResult(String[] grantedPermissions, String[] deniedPermissions, String[] disabledPermissions) {
         informPermissionsDenied(deniedPermissions);
         informPermissionsGranted(grantedPermissions);
+        informPermissionsDisabled(disabledPermissions);
 
         pendingPermissionRequests.removeAll(asList(grantedPermissions));
         pendingPermissionRequests.removeAll(asList(deniedPermissions));
+        pendingPermissionRequests.removeAll(asList(disabledPermissions));
         if (pendingPermissionRequests.isEmpty()) {
             manager.unregisterBroadcastReceiver();
         }
@@ -116,6 +118,25 @@ class PermissionHandler {
 
         for (PermissionManager.PermissionRequestListener listener : invalidatedListeners) {
             requiredPermissionsMap.remove(listener);
+        }
+    }
+
+    private void informPermissionsDisabled(String[] disabledPermissions) {
+        ArrayList<PermissionManager.PermissionRequestListener> invalidatedListeners = new ArrayList<>();
+
+        for (String disabledPermission : disabledPermissions) {
+            for (PermissionManager.PermissionRequestListener listener : requiredPermissionsMap.keySet()) {
+                Set permissionSet = requiredPermissionsMap.get(listener);
+                if (permissionSet.contains(disabledPermission)) {
+                    listener.onPermissionDisabled();
+                    invalidatedListeners.add(listener);
+                }
+            }
+
+            for (PermissionManager.PermissionRequestListener listener : invalidatedListeners) {
+                requiredPermissionsMap.remove(listener);
+            }
+            invalidatedListeners.clear();
         }
     }
 

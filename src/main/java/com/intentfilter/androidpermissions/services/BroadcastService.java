@@ -7,6 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import java.util.Set;
 
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_DENIED;
+import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_DISABLED;
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_GRANTED;
 
 public class BroadcastService {
@@ -17,10 +18,11 @@ public class BroadcastService {
         this.context = context;
     }
 
-    public void broadcastPermissionRequestResult(Set<String> grantedPermissions, Set<String> deniedPermissions) {
+    public void broadcastPermissionRequestResult(Set<String> grantedPermissions, Set<String> deniedPermissions, Set<String> disabledPermissions) {
         Intent intent = new Intent(IntentAction.ACTION_PERMISSIONS_REQUEST);
         intent.putExtra(EXTRA_PERMISSIONS_GRANTED, grantedPermissions.toArray(new String[grantedPermissions.size()]));
         intent.putExtra(EXTRA_PERMISSIONS_DENIED, deniedPermissions.toArray(new String[deniedPermissions.size()]));
+        intent.putExtra(EXTRA_PERMISSIONS_DISABLED, disabledPermissions.toArray(new String[disabledPermissions.size()]));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 

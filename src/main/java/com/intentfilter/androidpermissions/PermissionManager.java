@@ -23,6 +23,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS;
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_DENIED;
+import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_DISABLED;
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_GRANTED;
 
 
@@ -54,8 +55,9 @@ public class PermissionManager extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String[] grantedPermissions = intent.getStringArrayExtra(EXTRA_PERMISSIONS_GRANTED);
         String[] deniedPermissions = intent.getStringArrayExtra(EXTRA_PERMISSIONS_DENIED);
-        logPermissionsResponse(grantedPermissions, deniedPermissions);
-        permissionHandler.onPermissionsResult(grantedPermissions, deniedPermissions);
+        String[] disabledPermissions = intent.getStringArrayExtra(EXTRA_PERMISSIONS_DISABLED);
+        logPermissionsResponse(grantedPermissions, deniedPermissions, disabledPermissions);
+        permissionHandler.onPermissionsResult(grantedPermissions, deniedPermissions, disabledPermissions);
     }
 
     void startPermissionActivity(Set<String> permissions) {
@@ -103,14 +105,16 @@ public class PermissionManager extends BroadcastReceiver {
         return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE, notificationDeleteIntent, FLAG_ONE_SHOT);
     }
 
-    private void logPermissionsResponse(String[] grantedPermissions, String[] deniedPermissions) {
-        logger.i(String.format("Received broadcast response for permission(s). \nGranted: %s\nDenied: %s",
-                Arrays.toString(grantedPermissions), Arrays.toString(deniedPermissions)));
+    private void logPermissionsResponse(String[] grantedPermissions, String[] deniedPermissions, String[] disabledPermissions) {
+        logger.i(String.format("Received broadcast response for permission(s). \nGranted: %s\nDenied: %s\nDisabled: %s",
+                Arrays.toString(grantedPermissions), Arrays.toString(deniedPermissions), Arrays.toString(disabledPermissions)));
     }
 
     public interface PermissionRequestListener {
         void onPermissionGranted();
 
         void onPermissionDenied();
+
+        void onPermissionDisabled();
     }
 }
