@@ -6,8 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -39,11 +42,14 @@ public class NotificationService {
     public Notification buildNotification(String title, String message, Intent intent, PendingIntent deleteIntent) {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent, FLAG_ONE_SHOT);
 
-        int iconResourceId = context.getResources().getIdentifier(
-                "ic_launcher", "mipmap", context.getPackageName());
+        int iconResourceId = android.R.mipmap.sym_def_app_icon;
 
-        if (iconResourceId == 0) {
-            iconResourceId = android.R.mipmap.sym_def_app_icon;
+        try {
+            ApplicationInfo info = context.getPackageManager()
+                    .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            iconResourceId = info.metaData.getInt("com.google.firebase.messaging.default_notification_icon");
+        } catch (Exception e) {
+            Log.i(getClass().getName(), "to customize notifications, please define a default notification in your AndroidManifest.xml");
         }
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
