@@ -3,14 +3,14 @@ package com.intentfilter.androidpermissions;
 import com.intentfilter.androidpermissions.PermissionManager.PermissionRequestListener;
 import com.intentfilter.androidpermissions.helpers.AppStatus;
 import com.intentfilter.androidpermissions.helpers.Logger;
-import com.intentfilter.androidpermissions.services.NotificationService;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +19,6 @@ import static com.intentfilter.androidpermissions.services.BroadcastService.Inte
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -46,12 +45,12 @@ public class PermissionHandlerTest {
     private static final String PERMISSION_3 = "permission3";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         permissionHandler = new PermissionHandler(appStatus, logger, manager);
     }
 
     @Test
-    public void shouldNotAskForPermissionsIfAlreadyGranted() throws Exception {
+    public void shouldNotAskForPermissionsIfAlreadyGranted() {
         when(manager.permissionAlreadyGranted(PERMISSION_1)).thenReturn(true);
         when(manager.permissionAlreadyGranted(PERMISSION_2)).thenReturn(true);
 
@@ -62,19 +61,19 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldNotAskForPendingPermissions() throws Exception {
+    public void shouldNotAskForPendingPermissions() {
         permissionHandler.requestPermissions(new HashSet<>(singletonList(PERMISSION_2)));
         reset(manager);
         when(manager.permissionAlreadyGranted(PERMISSION_1)).thenReturn(true);
 
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
-        verify(manager, never()).showPermissionNotification(anySetOf(String.class), anyInt(), anyInt());
-        verify(manager, never()).startPermissionActivity(anySetOf(String.class));
+        verify(manager, never()).showPermissionNotification(ArgumentMatchers.<String>anySet(), anyInt(), anyInt());
+        verify(manager, never()).startPermissionActivity(ArgumentMatchers.<String>anySet());
     }
 
     @Test
-    public void shouldNotRespondToListenerIfAnyRequiredPermissionPending() throws Exception {
+    public void shouldNotRespondToListenerIfAnyRequiredPermissionPending() {
         permissionHandler.requestPermissions(new HashSet<>(singletonList(PERMISSION_2)));
         reset(manager);
 
@@ -85,7 +84,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldRegisterForBroadcastsWhenAskingPermissionsForFirstTime() throws Exception {
+    public void shouldRegisterForBroadcastsWhenAskingPermissionsForFirstTime() {
         List<String> permissions = singletonList(PERMISSION_1);
 
         permissionHandler.checkPermissions(permissions, requestListener);
@@ -94,7 +93,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldNotRegisterForBroadcastIfPermissionsAlreadyPending() throws Exception {
+    public void shouldNotRegisterForBroadcastIfPermissionsAlreadyPending() {
         List<String> permissions = singletonList(PERMISSION_1);
         permissionHandler.requestPermissions(new HashSet<>(permissions));
         reset(manager);
@@ -105,7 +104,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldOnlyAskForNonPendingAndNonGrantedPermissions() throws Exception {
+    public void shouldOnlyAskForNonPendingAndNonGrantedPermissions() {
         permissionHandler.requestPermissions(new HashSet<>(singletonList(PERMISSION_2)));
         reset(manager);
         when(manager.permissionAlreadyGranted(PERMISSION_1)).thenReturn(true);
@@ -119,29 +118,29 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldShowPermissionsDialogIfAppIsInForeground() throws Exception {
+    public void shouldShowPermissionsDialogIfAppIsInForeground() {
         List<String> permissions = asList(PERMISSION_1, PERMISSION_2);
         when(appStatus.isInForeground()).thenReturn(true);
 
         permissionHandler.checkPermissions(permissions, requestListener);
 
         verify(manager).startPermissionActivity(new HashSet<>(permissions));
-        verify(manager, never()).showPermissionNotification(anySetOf(String.class), anyInt(), anyInt());
+        verify(manager, never()).showPermissionNotification(ArgumentMatchers.<String>anySet(), anyInt(), anyInt());
     }
 
     @Test
-    public void shouldShowPermissionsNotificationIfAppIsInBackground() throws Exception {
+    public void shouldShowPermissionsNotificationIfAppIsInBackground() {
         List<String> permissions = asList(PERMISSION_1, PERMISSION_2);
         when(appStatus.isInForeground()).thenReturn(false);
 
         permissionHandler.checkPermissions(permissions, requestListener);
 
         verify(manager).showPermissionNotification(new HashSet<>(permissions), R.string.title_permission_required, R.string.message_permission_required);
-        verify(manager, never()).startPermissionActivity(anySetOf(String.class));
+        verify(manager, never()).startPermissionActivity(ArgumentMatchers.<String>anySet());
     }
 
     @Test
-    public void shouldInformListenersForDeniedPermissions() throws Exception {
+    public void shouldInformListenersForDeniedPermissions() {
         List<String> permissions = singletonList(PERMISSION_1);
         permissionHandler.checkPermissions(permissions, requestListener);
 
@@ -151,7 +150,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldInformListenersForGrantedPermissions() throws Exception {
+    public void shouldInformListenersForGrantedPermissions() {
         List<String> permissions = singletonList(PERMISSION_1);
         permissionHandler.checkPermissions(permissions, requestListener);
 
@@ -161,7 +160,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldInformListenerOnlyWhenAllPermissionsGranted() throws Exception {
+    public void shouldInformListenerOnlyWhenAllPermissionsGranted() {
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
         permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new String[]{});
@@ -176,7 +175,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldInformListenersForRespectivePermissions() throws Exception {
+    public void shouldInformListenersForRespectivePermissions() {
         PermissionRequestListener anotherRequestListener = Mockito.mock(PermissionRequestListener.class);
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
         permissionHandler.checkPermissions(singletonList(PERMISSION_2), anotherRequestListener);
@@ -188,7 +187,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldUnregisterForBroadcastWhenAllPermissionRequestsAreResponded() throws Exception {
+    public void shouldUnregisterForBroadcastWhenAllPermissionRequestsAreResponded() {
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
         permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new String[]{PERMISSION_1});
@@ -197,7 +196,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldNotUnregisterForBroadcastIfAnyPermissionIsPending() throws Exception {
+    public void shouldNotUnregisterForBroadcastIfAnyPermissionIsPending() {
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
         permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new String[]{});
@@ -206,7 +205,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldRemoveListenerOnceInformedAboutPermissionsResult() throws Exception {
+    public void shouldRemoveListenerOnceInformedAboutPermissionsResult() {
         PermissionRequestListener anotherRequestListener = Mockito.mock(PermissionRequestListener.class);
         permissionHandler.checkPermissions(singletonList(PERMISSION_1), anotherRequestListener);
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
@@ -220,7 +219,7 @@ public class PermissionHandlerTest {
     }
 
     @Test
-    public void shouldInvalidatePendingPermissionRequests() throws Exception {
+    public void shouldInvalidatePendingPermissionRequests() {
         List<String> permissions = asList(PERMISSION_1, PERMISSION_2);
         when(appStatus.isInForeground()).thenReturn(true);
         permissionHandler.checkPermissions(permissions, requestListener);
