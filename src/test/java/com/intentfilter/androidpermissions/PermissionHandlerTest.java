@@ -3,11 +3,15 @@ package com.intentfilter.androidpermissions;
 import com.intentfilter.androidpermissions.PermissionManager.PermissionRequestListener;
 import com.intentfilter.androidpermissions.helpers.AppStatus;
 import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.models.DeniedPermission;
+import com.intentfilter.androidpermissions.models.DeniedPermissions;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -18,6 +22,9 @@ import java.util.List;
 import static com.intentfilter.androidpermissions.services.BroadcastService.IntentAction.ACTION_PERMISSIONS_REQUEST;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
@@ -38,6 +45,9 @@ public class PermissionHandlerTest {
     private PermissionRequestListener requestListener;
     @Mock
     private Logger logger;
+
+    @Captor
+    ArgumentCaptor<DeniedPermissions> permissionsCaptor;
 
     private PermissionHandler permissionHandler;
     private static final String PERMISSION_1 = "permission1";
@@ -79,7 +89,7 @@ public class PermissionHandlerTest {
 
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
-        verify(requestListener, never()).onPermissionDenied();
+        verify(requestListener, never()).onPermissionDenied(any(DeniedPermissions.class));
         verify(requestListener, never()).onPermissionGranted();
     }
 
@@ -142,11 +152,13 @@ public class PermissionHandlerTest {
     @Test
     public void shouldInformListenersForDeniedPermissions() {
         List<String> permissions = singletonList(PERMISSION_1);
+        DeniedPermission deniedPermission = new DeniedPermission(PERMISSION_1, false);
+        DeniedPermissions deniedPermissions = DeniedPermissions.create(deniedPermission);
         permissionHandler.checkPermissions(permissions, requestListener);
 
-        permissionHandler.onPermissionsResult(new String[]{}, new String[]{PERMISSION_1});
+        permissionHandler.onPermissionsResult(new String[]{}, deniedPermissions);
 
-        verify(requestListener).onPermissionDenied();
+        verify(requestListener).onPermissionDenied(deniedPermissions);
     }
 
     @Test
@@ -154,7 +166,7 @@ public class PermissionHandlerTest {
         List<String> permissions = singletonList(PERMISSION_1);
         permissionHandler.checkPermissions(permissions, requestListener);
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new String[]{});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new DeniedPermissions());
 
         verify(requestListener).onPermissionGranted();
     }
@@ -163,15 +175,15 @@ public class PermissionHandlerTest {
     public void shouldInformListenerOnlyWhenAllPermissionsGranted() {
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new String[]{});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new DeniedPermissions());
 
         verify(requestListener, never()).onPermissionGranted();
-        verify(requestListener, never()).onPermissionDenied();
+        verify(requestListener, never()).onPermissionDenied(any(DeniedPermissions.class));
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new String[]{});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new DeniedPermissions());
 
         verify(requestListener).onPermissionGranted();
-        verify(requestListener, never()).onPermissionDenied();
+        verify(requestListener, never()).onPermissionDenied(any(DeniedPermissions.class));
     }
 
     @Test
@@ -179,18 +191,21 @@ public class PermissionHandlerTest {
         PermissionRequestListener anotherRequestListener = Mockito.mock(PermissionRequestListener.class);
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
         permissionHandler.checkPermissions(singletonList(PERMISSION_2), anotherRequestListener);
+        DeniedPermission deniedPermission = new DeniedPermission(PERMISSION_1, false);
+        DeniedPermissions deniedPermissions = DeniedPermissions.create(deniedPermission);
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new String[]{PERMISSION_1});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, deniedPermissions);
 
-        verify(requestListener).onPermissionDenied();
+        verify(requestListener).onPermissionDenied(deniedPermissions);
         verify(anotherRequestListener).onPermissionGranted();
     }
 
     @Test
     public void shouldUnregisterForBroadcastWhenAllPermissionRequestsAreResponded() {
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
+        DeniedPermission deniedPermission = new DeniedPermission(PERMISSION_1, false);
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new String[]{PERMISSION_1});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, DeniedPermissions.create(deniedPermission));
 
         verify(manager).unregisterBroadcastReceiver();
     }
@@ -199,7 +214,7 @@ public class PermissionHandlerTest {
     public void shouldNotUnregisterForBroadcastIfAnyPermissionIsPending() {
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new String[]{});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_2}, new DeniedPermissions());
 
         verify(manager, never()).unregisterBroadcastReceiver();
     }
@@ -209,13 +224,14 @@ public class PermissionHandlerTest {
         PermissionRequestListener anotherRequestListener = Mockito.mock(PermissionRequestListener.class);
         permissionHandler.checkPermissions(singletonList(PERMISSION_1), anotherRequestListener);
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
-        permissionHandler.onPermissionsResult(new String[]{}, new String[]{PERMISSION_2});
+        DeniedPermissions deniedPermissions = DeniedPermissions.create(new DeniedPermission(PERMISSION_2, true));
+        permissionHandler.onPermissionsResult(new String[]{}, deniedPermissions);
 
-        permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new String[]{});
+        permissionHandler.onPermissionsResult(new String[]{PERMISSION_1}, new DeniedPermissions());
 
         verify(anotherRequestListener).onPermissionGranted();
         verify(requestListener, never()).onPermissionGranted();
-        verify(requestListener, times(1)).onPermissionDenied();
+        verify(requestListener, times(1)).onPermissionDenied(deniedPermissions);
     }
 
     @Test
@@ -227,7 +243,11 @@ public class PermissionHandlerTest {
         permissionHandler.invalidatePendingPermissionRequests(permissions);
 
         verify(manager).unregisterBroadcastReceiver();
-        verify(requestListener).onPermissionDenied();
+        verify(requestListener).onPermissionDenied(permissionsCaptor.capture());
+        DeniedPermissions deniedPermissions = permissionsCaptor.getValue();
+        assertThat(deniedPermissions, hasItems(
+                new DeniedPermission(PERMISSION_1, false),
+                new DeniedPermission(PERMISSION_2, false)));
 
         //To verify if permissions are asked again once invalidated
         permissionHandler.checkPermissions(permissions, requestListener);

@@ -11,7 +11,10 @@ import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.models.DeniedPermissions;
 import com.intentfilter.androidpermissions.services.NotificationService;
+
+import org.parceler.Parcels;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,7 +56,7 @@ public class PermissionManager extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String[] grantedPermissions = intent.getStringArrayExtra(EXTRA_PERMISSIONS_GRANTED);
-        String[] deniedPermissions = intent.getStringArrayExtra(EXTRA_PERMISSIONS_DENIED);
+        DeniedPermissions deniedPermissions = Parcels.unwrap(intent.getParcelableExtra(EXTRA_PERMISSIONS_DENIED));
         logPermissionsResponse(grantedPermissions, deniedPermissions);
         permissionHandler.onPermissionsResult(grantedPermissions, deniedPermissions);
     }
@@ -73,7 +76,7 @@ public class PermissionManager extends BroadcastReceiver {
     @NonNull
     private Intent permissionActivityIntent(Set<String> permissions) {
         return new Intent(context, PermissionsActivity.class)
-                .putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[permissions.size()]))
+                .putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[0]))
                 .setAction(permissions.toString())
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
@@ -99,18 +102,18 @@ public class PermissionManager extends BroadcastReceiver {
     @NonNull
     private PendingIntent notificationDismissIntent(Set<String> permissions) {
         Intent notificationDeleteIntent = new Intent(context, NotificationDismissReceiver.class);
-        notificationDeleteIntent.putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[permissions.size()]));
+        notificationDeleteIntent.putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[0]));
         return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE, notificationDeleteIntent, FLAG_ONE_SHOT);
     }
 
-    private void logPermissionsResponse(String[] grantedPermissions, String[] deniedPermissions) {
+    private void logPermissionsResponse(String[] grantedPermissions, DeniedPermissions deniedPermissions) {
         logger.i(String.format("Received broadcast response for permission(s). \nGranted: %s\nDenied: %s",
-                Arrays.toString(grantedPermissions), Arrays.toString(deniedPermissions)));
+                Arrays.toString(grantedPermissions), deniedPermissions));
     }
 
     public interface PermissionRequestListener {
         void onPermissionGranted();
 
-        void onPermissionDenied();
+        void onPermissionDenied(DeniedPermissions deniedPermissions);
     }
 }

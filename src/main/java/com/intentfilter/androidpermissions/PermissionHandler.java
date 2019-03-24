@@ -6,6 +6,8 @@ import android.support.annotation.VisibleForTesting;
 
 import com.intentfilter.androidpermissions.helpers.AppStatus;
 import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.models.DeniedPermission;
+import com.intentfilter.androidpermissions.models.DeniedPermissions;
 import com.intentfilter.androidpermissions.services.BroadcastService;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ class PermissionHandler {
     private Logger logger;
     private PermissionManager manager;
     private final AppStatus appStatus;
-    private HashMap<PermissionManager.PermissionRequestListener, Set> requiredPermissionsMap = new HashMap<>();
+    private HashMap<PermissionManager.PermissionRequestListener, Set<String>> requiredPermissionsMap = new HashMap<>();
     private Set<String> pendingPermissionRequests = new HashSet<>();
 
     PermissionHandler(PermissionManager manager, Context context) {
@@ -49,12 +51,12 @@ class PermissionHandler {
         }
     }
 
-    void onPermissionsResult(String[] grantedPermissions, String[] deniedPermissions) {
+    void onPermissionsResult(String[] grantedPermissions, DeniedPermissions deniedPermissions) {
         informPermissionsDenied(deniedPermissions);
         informPermissionsGranted(grantedPermissions);
 
         pendingPermissionRequests.removeAll(asList(grantedPermissions));
-        pendingPermissionRequests.removeAll(asList(deniedPermissions));
+        pendingPermissionRequests.removeAll(deniedPermissions.stripped());
         if (pendingPermissionRequests.isEmpty()) {
             manager.unregisterBroadcastReceiver();
         }
@@ -76,29 +78,33 @@ class PermissionHandler {
 
     void invalidatePendingPermissionRequests(Collection<String> permissions) {
         pendingPermissionRequests.removeAll(permissions);
-        informPermissionsDenied(permissions.toArray(new String[permissions.size()]));
+        DeniedPermissions deniedPermissions = new DeniedPermissions();
+        for (String permission : permissions) {
+            deniedPermissions.add(new DeniedPermission(permission, false));
+        }
+        informPermissionsDenied(deniedPermissions);
 
         if (pendingPermissionRequests.isEmpty()) {
             manager.unregisterBroadcastReceiver();
         }
     }
 
-    private void informPermissionsDenied(String[] deniedPermissions) {
+    private void informPermissionsDenied(DeniedPermissions deniedPermissions) {
         ArrayList<PermissionManager.PermissionRequestListener> invalidatedListeners = new ArrayList<>();
 
-        for (String deniedPermission : deniedPermissions) {
-            for (PermissionManager.PermissionRequestListener listener : requiredPermissionsMap.keySet()) {
-                Set permissionSet = requiredPermissionsMap.get(listener);
-                if (permissionSet.contains(deniedPermission)) {
-                    listener.onPermissionDenied();
-                    invalidatedListeners.add(listener);
-                }
-            }
+        for (PermissionManager.PermissionRequestListener listener : requiredPermissionsMap.keySet()) {
+            Set<String> permissionSet = requiredPermissionsMap.get(listener);
+            Set<String> strippedDeniedPermissions = deniedPermissions.stripped();
 
-            for (PermissionManager.PermissionRequestListener listener : invalidatedListeners) {
-                requiredPermissionsMap.remove(listener);
+            strippedDeniedPermissions.retainAll(permissionSet);
+            if (!strippedDeniedPermissions.isEmpty()) {
+                listener.onPermissionDenied(deniedPermissions);
+                invalidatedListeners.add(listener);
             }
-            invalidatedListeners.clear();
+        }
+
+        for (PermissionManager.PermissionRequestListener listener : invalidatedListeners) {
+            requiredPermissionsMap.remove(listener);
         }
     }
 
@@ -106,7 +112,7 @@ class PermissionHandler {
         ArrayList<PermissionManager.PermissionRequestListener> invalidatedListeners = new ArrayList<>();
 
         for (PermissionManager.PermissionRequestListener listener : requiredPermissionsMap.keySet()) {
-            Set permissionSet = requiredPermissionsMap.get(listener);
+            Set<String> permissionSet = requiredPermissionsMap.get(listener);
             permissionSet.removeAll(asList(grantedPermissions));
             if (permissionSet.isEmpty()) {
                 listener.onPermissionGranted();

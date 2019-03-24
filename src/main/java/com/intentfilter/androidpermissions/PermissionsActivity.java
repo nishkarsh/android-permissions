@@ -8,6 +8,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.models.DeniedPermission;
+import com.intentfilter.androidpermissions.models.DeniedPermissions;
 import com.intentfilter.androidpermissions.services.BroadcastService;
 
 import java.util.Arrays;
@@ -55,13 +57,14 @@ public class PermissionsActivity extends AppCompatActivity {
 
     private void sendPermissionResponse(@NonNull String[] permissions, @NonNull int[] grantResults) {
         Set<String> grantedPermissions = new HashSet<>();
-        Set<String> deniedPermissions = new HashSet<>();
+        DeniedPermissions deniedPermissions = new DeniedPermissions();
 
         for (int i = 0; i < permissions.length; i++) {
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                 grantedPermissions.add(permissions[i]);
             } else {
-                deniedPermissions.add(permissions[i]);
+                boolean shouldShowRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]);
+                deniedPermissions.add(new DeniedPermission(permissions[i], shouldShowRationale));
             }
         }
 
