@@ -1,3 +1,6 @@
+env:
+- VERSION_NUMBER="${MAJOR_VERSION}.${MINOR_VERSION}.${TRAVIS_BUILD_NUMBER}"
+
 language: android
 android:
   components:
@@ -13,9 +16,10 @@ jdk:
 script:
 - ./gradlew build generatePomFileForAndroidPermissionsPublication
 
+before_deploy: sed -i "s/{{VERSION_NUMBER}}/${VERSION_NUMBER}/" bintray-descriptor-template.json
 deploy:
   provider: bintray
-  file: "bintray-upload-descriptor.json"
+  file: "bintray-descriptor-template.json"
   on:
     branch: master
   user:
