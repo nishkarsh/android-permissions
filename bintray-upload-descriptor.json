@@ -1,0 +1,30 @@
+{
+  "package": {
+    "name": "com.intentfilter:android-permissions",
+    "subject": "nishkarsh",
+    "repo": "maven",
+    "website_url": "https://github.com/nishkarsh/android-permissions",
+    "issue_tracker_url": "https://github.com/nishkarsh/android-permissions/issues",
+    "vcs_url": "https://github.com/nishkarsh/android-permissions",
+    "licenses": [
+      "MIT"
+    ],
+    "public_download_numbers": true,
+    "public_stats": true
+  },
+  "version": {
+    "name": "${MAJOR_VERSION}.${MINOR_VERSION}.${TRAVIS_BUILD_NUMBER}",
+    "gpgSign": false
+  },
+  "files": [
+    {
+      "includePattern": "build/outputs/aar(.*)*/(.*release\\.aar)",
+      "uploadPattern": "${MAJOR_VERSION}.${MINOR_VERSION}.${TRAVIS_BUILD_NUMBER}/$2"
+    },
+    {
+      "includePattern": "build/publications/androidPermissions/(.*pom.*\\.xml)",
+      "uploadPattern": "${MAJOR_VERSION}.${MINOR_VERSION}.${TRAVIS_BUILD_NUMBER}/$1"
+    }
+  ],
+  "publish": true
+}

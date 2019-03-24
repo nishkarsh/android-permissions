@@ -1,37 +1,23 @@
 language: android
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-28.0.3
-    - android-28
-    - extra-android-m2repository
+  - tools
+  - platform-tools
+  - build-tools-28.0.3
+  - android-28
+  - extra-android-m2repository
+
 jdk:
-  - oraclejdk8
+- oraclejdk8
+
 script:
-  - ./gradlew build generatePomFileForAndroidPermissionsPublication
+- ./gradlew build generatePomFileForAndroidPermissionsPublication
+
 deploy:
   provider: bintray
-  file:
-    package:
-      repo: android-permissions
-      on:
-        branch: master
-      website_url: "https://github.com/nishkarsh/android-permissions"
-      issue_tracker_url: "https://github.com/nishkarsh/android-permissions/issues"
-      vcs_url: "https://github.com/nishkarsh/android-permissions"
-      licenses:
-        - MIT
-      public_download_numbers: true
-      public_stats: true
-    version:
-      name: "${MAJOR_VERSION}.${MINOR_VERSION}.${TRAVIS_BUILD_NUMBER}"
-    files:
-      - includePattern: build/outputs/aar(.*)*/(.*release\.aar)
-        uploadPattern: aar/$2
-      - includePattern: build/publications/androidPermissions/(.*pom.*\.xml)
-        uploadPattern: pom/$1
-    publish: true
+  file: "bintray-upload-descriptor.json"
+  on:
+    branch: master
   user:
     secure: ${TRAVIS_USER}
   key:
