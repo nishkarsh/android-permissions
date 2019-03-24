@@ -14,9 +14,9 @@ deploy:
   provider: bintray
   file:
     package:
-      name: auto-upload
-      subject: intentfilter
       repo: android-permissions
+      on:
+        branch: master
       website_url: "https://github.com/nishkarsh/android-permissions"
       issue_tracker_url: "https://github.com/nishkarsh/android-permissions/issues"
       vcs_url: "https://github.com/nishkarsh/android-permissions"
