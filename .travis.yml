@@ -24,4 +24,3 @@ deploy:
   key:
     secure: ${TRAVIS_KEY}
   skip_cleanup: true
-  dry_run: true

@@ -1,6 +1,6 @@
 {
   "package": {
-    "name": "com.intentfilter.androidpermissions",
+    "name": "com.intentfilter:android-permissions",
     "subject": "nishkarsh",
     "repo": "maven",
     "website_url": "https://github.com/nishkarsh/android-permissions",
