@@ -13,6 +13,7 @@ jdk:
 script:
 - ./gradlew build generatePomFileForAndroidPermissionsPublication
 
+before_deploy: sed -i "s/{{VERSION_NUMBER}}/${MAJOR_VERSION}\.${MINOR_VERSION}\.${TRAVIS_BUILD_NUMBER}/g" bintray-descriptor-template.json
 deploy:
   provider: bintray
   file: "bintray-descriptor-template.json"
