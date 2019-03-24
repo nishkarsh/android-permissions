@@ -14,16 +14,16 @@
   },
   "version": {
     "name": "{{VERSION_NUMBER}}",
-    "gpgSign": false
+    "gpgSign": true
   },
   "files": [
     {
       "includePattern": "build/outputs/aar/android-permissions-release.aar",
-      "uploadPattern": "{{VERSION_NUMBER}}/android-permissions-{{VERSION_NUMBER}}.aar"
+      "uploadPattern": "/com/intentfilter/android-permissions/{{VERSION_NUMBER}}/android-permissions-{{VERSION_NUMBER}}.aar"
     },
     {
       "includePattern": "build/publications/androidPermissions/pom-default.xml",
-      "uploadPattern": "{{VERSION_NUMBER}}/android-permissions-{{VERSION_NUMBER}}.pom"
+      "uploadPattern": "/com/intentfilter/android-permissions/{{VERSION_NUMBER}}/android-permissions-{{VERSION_NUMBER}}.pom"
     }
   ],
   "publish": false
