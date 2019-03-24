@@ -1,57 +1,39 @@
 language: android
 android:
   components:
-  - tools
-  - platform-tools
-  - build-tools-26.0.2
-  - android-27
-  - extra-android-m2repository
+    - tools
+    - platform-tools
+    - build-tools-28.0.3
+    - android-28
+    - extra-android-m2repository
 jdk:
-- oraclejdk8
+  - oraclejdk8
 script:
-- ./gradlew build
+  - ./gradlew build generatePomFileForAndroidPermissionsPublication
 deploy:
   provider: bintray
-  file: {
-    "package": {
-      "name": "auto-upload",
-      "repo": "android-permissions",
-      "subject": "myBintrayUser",
-      "desc": "I was pushed completely automatically",
-      "website_url": "www.jfrog.com",
-      "issue_tracker_url": "https://github.com/bintray/bintray-client-java/issues",
-      "vcs_url": "https://github.com/bintray/bintray-client-java.git",
-      "github_use_tag_release_notes": true,
-      "github_release_notes_file": "RELEASE.txt",
-      "licenses": ["MIT"],
-      "labels": ["cool", "awesome", "gorilla"],
-      "public_download_numbers": false,
-      "public_stats": false,
-      "attributes": [{"name": "att1", "values": ["val1"], "type": "string"},
-                     {"name": "att2", "values": [1, 2.2, 4], "type": "number"},
-                     {"name": "att5", "values": ["2014-12-28T19:43:37+0100"], "type": "date"}]
-    },
-
-    "version": {
-      "name": "0.5",
-      "desc": "This is a version",
-      "released": "2015-01-04",
-      "vcs_tag": "0.5",
-      "attributes": [{"name": "VerAtt1", "values": ["VerVal1"], "type": "string"},
-                     {"name": "VerAtt2", "values": [1, 3.3, 5], "type": "number"},
-                     {"name": "VerAtt3", "values": ["2015-01-01T19:43:37+0100"], "type": "date"}],
-      "gpgSign": false
-    },
-
-    "files":
-      [
-      {"includePattern": "build/bin(.*)*/(.*\\.gem)", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "gems/$2"},
-      {"includePattern": "build/docs/(.*)", "uploadPattern": "docs/$1"}
-      ],
-    "publish": true
-  }
-  name: android
+  file:
+    package:
+      name: auto-upload
+      subject: intentfilter
+      repo: android-permissions
+      website_url: "https://github.com/nishkarsh/android-permissions"
+      issue_tracker_url: "https://github.com/nishkarsh/android-permissions/issues"
+      vcs_url: "https://github.com/nishkarsh/android-permissions"
+      licenses:
+        - MIT
+      public_download_numbers: true
+      public_stats: true
+    version:
+      name: "${MAJOR_VERSION}.${MINOR_VERSION}.${TRAVIS_BUILD_NUMBER}"
+    files:
+      - includePattern: build/outputs/aar(.*)*/(.*release\.aar)
+        uploadPattern: aar/$2
+      - includePattern: build/publications/androidPermissions/(.*pom.*\.xml)
+        uploadPattern: pom/$1
+    publish: true
   user:
-    secure: Rf4P8nMmaTECWz16j3CJ4RkIHNozdRcFH2QhQGpvDED3OvSBd+r/ylso0d2RaIqPPWt/t8xnVHoegsShyu9knrhE+qE2JuuPTanCAJz+JT97XqxEGwaCFAEoDNJGdncTqFQnObhCCb0LquiVMwQ4kV7Bb9O/9xerFcvU8ogotrC0xw9owOrAhQACp2ts3MzP/Hc3kard9KgMj/5/PkC3NhC0JEKMwVCSxGi+xQyg4dXkvLfdS6tt43AgHW5U0rMSi6FZkMNqzWsSfMc0F7GGSsOetb66v3tY0NxwtJPpcMN4Xsj8PegNVSDm24YWZHrZ1KJCi6BUmS15dR2/vXfz6xLiJpf4IhtAVFr0ov4tPrPzZKxtWvLB/e4o3k2rzn3/CcVr6UYyqBy6TIhRDyvZ3vc8dM51pBCnUBzTdOdqaTTCS6cHaDHW6WO2G+wTvK2jMkKrKrjUHix4QqparDUuLV6qlZogt1ORdcbkEfgT0BohwQG4BzJ9qVwSGMAL+bEqf3PCkDInd62F2sAE5zuk4PJwgG5XEPXG9Ayb59isvOaknHo+pn/OH12ZJxcH8GEy9GydoKLUiguuVs4FvkjYHWJNp1OW+GZzEg6T8oJs/dAa1ON/5iVpHiF9JeqzE+DUj8AqcdUDJ8L4O3IBTrBB1dAUzwECC85eDh5qL9lopdQ=
+    secure: ${TRAVIS_USER}
   key:
-    secure: t8FPWB9DkpCCqyKld2PK4bC+YdlgC5FUhw8lv0dwW9bJURkkQRMnXgeg4bhxhpAXpEhqZxRqUGg3PZYyww2Dsll+XG4RBD5yzW9v1cetzzSAv/7b+P7hxYJwWbMNhH/ACH9YTVOKJ/JYLXdq3LWBs+uKKuInCkI1RmMuBWrWJlr3oC0DycVpB30d6FYzvRpn8Yjw+20snaQPiPtSgCpfsMJ3cB7mxjLPlD7uCp5hiQFCUxZTebvhfEUgYIuS/eb/ZnXVywv7gEvDNfEE2opR0afx2JOQuS3ADACmqnfT+xtuGv7LAifVYXrf0Zr4nlkRr6/F0J5eRr3GrMAdwzSTZT3+q0+ky58B7KURwbLM9quGNr+GRf0C0biDoCt4/gn4PyJSUD+F14dwbHqGUlLHxVAsLKniM8i5lduwy5r/fCQnqu2TVxQNsd6WkD0FT7Nl8GCNzDujA06fUsBhEwpzK2CdMCwpZFWRhl4InTdtaeNiz1CPgS6KTukwMGlcFXsGJPOHXx6sTC+c77zD6RGopoRgsiEOBDxo6LdhRZbO8chQGMHPtxrZ5P+MRk6sB8jbW+6KqiDSFf40CtoaU/AO2thVz6DmckfM9Lnoamh9w1R/5P+mE/Q4okF6aWZ0RaSNRQ3o5LOrpkntTbuS+NgDYEGlrzN+dEx9r1e7JW/yDpM=
+    secure: ${TRAVIS_KEY}
+  skip_cleanup: true
