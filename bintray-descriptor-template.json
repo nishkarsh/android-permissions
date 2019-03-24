@@ -13,17 +13,17 @@
     "public_stats": true
   },
   "version": {
-    "name": "{{VERSION_NUMBER}}",
+    "name": "1.0.34",
     "gpgSign": false
   },
   "files": [
     {
-      "includePattern": "build/outputs/aar(.*)*/(.*release\\.aar)",
-      "uploadPattern": "{{VERSION_NUMBER}}/$2"
+      "includePattern": "build/outputs/aar/android-permissions-release.aar",
+      "uploadPattern": "1.0.34/android-permissions-1.0.34.aar"
     },
     {
-      "includePattern": "build/publications/androidPermissions/(.*pom.*\\.xml)",
-      "uploadPattern": "{{VERSION_NUMBER}}/$1"
+      "includePattern": "build/publications/androidPermissions/pom-default.xml",
+      "uploadPattern": "1.0.34/android-permissions-1.0.34.pom"
     }
   ],
   "publish": false
