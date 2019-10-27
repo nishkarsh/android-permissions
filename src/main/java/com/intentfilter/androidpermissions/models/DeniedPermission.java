@@ -1,6 +1,6 @@
 package com.intentfilter.androidpermissions.models;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
