@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AppStatus {
 
-    private Context context;
+    private final Context context;
 
     public AppStatus(Context context) {
         this.context = context;

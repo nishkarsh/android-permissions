@@ -5,7 +5,7 @@ import android.util.Log;
 import com.intentfilter.androidpermissions.BuildConfig;
 
 public class Logger {
-    private String LOG_TAG;
+    private final String LOG_TAG;
 
     private Logger(Class clazz) {
         this.LOG_TAG = clazz.getSimpleName();

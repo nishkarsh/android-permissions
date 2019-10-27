@@ -19,11 +19,11 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 class PermissionHandler {
-    private Logger logger;
-    private PermissionManager manager;
+    private final Logger logger;
+    private final PermissionManager manager;
     private final AppStatus appStatus;
-    private HashMap<PermissionManager.PermissionRequestListener, Set<String>> requiredPermissionsMap = new HashMap<>();
-    private Set<String> pendingPermissionRequests = new HashSet<>();
+    private final HashMap<PermissionManager.PermissionRequestListener, Set<String>> requiredPermissionsMap = new HashMap<>();
+    private final Set<String> pendingPermissionRequests = new HashSet<>();
 
     PermissionHandler(PermissionManager manager, Context context) {
         this(new AppStatus(context), Logger.loggerFor(PermissionHandler.class), manager);
