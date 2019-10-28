@@ -7,8 +7,8 @@ import org.parceler.ParcelConstructor;
 
 @Parcel
 public class DeniedPermission {
-    String permission;
-    boolean shouldShowRationale;
+    final String permission;
+    final boolean shouldShowRationale;
 
     @ParcelConstructor
     public DeniedPermission(String permission, boolean shouldShowRationale) {
@@ -25,7 +25,6 @@ public class DeniedPermission {
     public String toString() {
         return permission;
     }
-
 
     @Override
     public boolean equals(Object anotherDeniedPermission) {
