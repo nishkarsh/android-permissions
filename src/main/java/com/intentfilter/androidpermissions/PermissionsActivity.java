@@ -2,6 +2,7 @@ package com.intentfilter.androidpermissions;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -19,11 +20,10 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 public class PermissionsActivity extends AppCompatActivity {
-
     static final int PERMISSIONS_REQUEST_CODE = 100;
-    public static final String EXTRA_PERMISSIONS_GRANTED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_GRANTED";
-    public static final String EXTRA_PERMISSIONS_DENIED = BuildConfig.APPLICATION_ID + ".PERMISSIONS_DENIED";
-    static final String EXTRA_PERMISSIONS = BuildConfig.APPLICATION_ID + ".PERMISSIONS";
+    public static final String EXTRA_PERMISSIONS_GRANTED = BuildConfig.LIBRARY_PACKAGE_NAME + ".PERMISSIONS_GRANTED";
+    public static final String EXTRA_PERMISSIONS_DENIED = BuildConfig.LIBRARY_PACKAGE_NAME + ".PERMISSIONS_DENIED";
+    static final String EXTRA_PERMISSIONS = BuildConfig.LIBRARY_PACKAGE_NAME + ".PERMISSIONS";
     static final Logger logger = Logger.loggerFor(PermissionsActivity.class);
 
     @Override
