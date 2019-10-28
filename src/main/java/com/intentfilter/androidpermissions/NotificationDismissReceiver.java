@@ -13,7 +13,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static java.util.Arrays.asList;
 
 public class NotificationDismissReceiver extends BroadcastReceiver {
-
     private static final Logger logger = Logger.loggerFor(NotificationDismissReceiver.class);
 
     @Override

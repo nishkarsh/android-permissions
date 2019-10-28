@@ -30,7 +30,6 @@ import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERM
 
 
 public class PermissionManager extends BroadcastReceiver {
-
     private final Context context;
     private final Logger logger;
     private static PermissionManager permissionManager;

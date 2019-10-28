@@ -6,7 +6,6 @@ import android.content.Context;
 import java.util.List;
 
 public class AppStatus {
-
     private final Context context;
 
     public AppStatus(Context context) {

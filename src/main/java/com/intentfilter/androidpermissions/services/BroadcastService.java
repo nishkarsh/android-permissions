@@ -14,7 +14,6 @@ import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERM
 import static com.intentfilter.androidpermissions.PermissionsActivity.EXTRA_PERMISSIONS_GRANTED;
 
 public class BroadcastService {
-
     private final Context context;
 
     public BroadcastService(Context context) {

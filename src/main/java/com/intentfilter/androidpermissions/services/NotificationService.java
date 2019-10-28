@@ -15,7 +15,6 @@ import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationService {
-
     private static final String CHANNEL_ID = "android-permissions";
     private final Context context;
     private final NotificationManager notificationManager;
