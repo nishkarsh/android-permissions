@@ -17,6 +17,10 @@ repositories {
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
+static String makeVersionName(String majorVersion, String minorVersion, String patchVersion) {
+    majorVersion ? majorVersion + "." + minorVersion + "." + patchVersion : "1.0.0"
+}
+
 def getVersionCode = {
     def versionCode = System.getenv("TRAVIS_BUILD_NUMBER") ? System.getenv("TRAVIS_BUILD_NUMBER").toInteger() : 1
     println "versionCode is set to $versionCode"
@@ -24,7 +28,7 @@ def getVersionCode = {
 }
 
 def getVersionName = {
-    def versionName = System.getenv("TRAVIS_BUILD_NUMBER") ? "1.0." + System.getenv("TRAVIS_BUILD_NUMBER") : "1.0.0"
+    def versionName = makeVersionName(System.getenv("MAJOR_VERSION"), System.getenv("MINOR_VERSION"), System.getenv("TRAVIS_BUILD_NUMBER"))
     println "versionName is set to $versionName"
     return versionName
 }
