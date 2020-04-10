@@ -19,8 +19,6 @@ deploy:
   file: "bintray-descriptor-template.json"
   on:
     branch: master
-  user:
-    secure: ${TRAVIS_USER}
-  key:
-    secure: ${TRAVIS_KEY}
+  user: ${TRAVIS_USER}
+  key: ${TRAVIS_KEY}
   skip_cleanup: true
