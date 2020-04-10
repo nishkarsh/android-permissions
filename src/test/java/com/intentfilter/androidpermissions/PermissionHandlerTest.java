@@ -18,10 +18,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import static com.intentfilter.androidpermissions.services.BroadcastService.IntentAction.ACTION_PERMISSIONS_REQUEST;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -252,5 +255,24 @@ public class PermissionHandlerTest {
         permissionHandler.checkPermissions(permissions, requestListener);
 
         verify(manager, times(2)).startPermissionActivity(new HashSet<>(permissions));
+    }
+
+    @Test
+    public void shouldSynchronizeAccessToPendingPermissionRequests() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(3);
+
+        for (int num = 0; num < 20; num++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2, PERMISSION_3), Mockito.mock(PermissionRequestListener.class));
+                    permissionHandler.onPermissionsResult(new String[]{PERMISSION_1, PERMISSION_2, PERMISSION_3}, new DeniedPermissions());
+                    countDownLatch.countDown();
+                }
+            }).start();
+        }
+
+        countDownLatch.await(800, MILLISECONDS);
+        assertThat(countDownLatch.getCount(), is(0L));
     }
 }

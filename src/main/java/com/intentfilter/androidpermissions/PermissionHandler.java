@@ -1,8 +1,6 @@
 package com.intentfilter.androidpermissions;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 
 import com.intentfilter.androidpermissions.helpers.AppStatus;
 import com.intentfilter.androidpermissions.helpers.Logger;
@@ -10,11 +8,14 @@ import com.intentfilter.androidpermissions.models.DeniedPermission;
 import com.intentfilter.androidpermissions.models.DeniedPermissions;
 import com.intentfilter.androidpermissions.services.BroadcastService;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import static java.util.Arrays.asList;
 
@@ -22,8 +23,8 @@ class PermissionHandler {
     private final Logger logger;
     private final PermissionManager manager;
     private final AppStatus appStatus;
-    private final HashMap<PermissionManager.PermissionRequestListener, Set<String>> requiredPermissionsMap = new HashMap<>();
-    private final Set<String> pendingPermissionRequests = new HashSet<>();
+    private final ConcurrentHashMap<PermissionManager.PermissionRequestListener, Set<String>> requiredPermissionsMap = new ConcurrentHashMap<>();
+    private final Set<String> pendingPermissionRequests = new CopyOnWriteArraySet<>();
 
     PermissionHandler(PermissionManager manager, Context context) {
         this(new AppStatus(context), Logger.loggerFor(PermissionHandler.class), manager);
@@ -52,8 +53,10 @@ class PermissionHandler {
     }
 
     void onPermissionsResult(String[] grantedPermissions, DeniedPermissions deniedPermissions) {
-        informPermissionsDenied(deniedPermissions);
-        informPermissionsGranted(grantedPermissions);
+        synchronized (requiredPermissionsMap) {
+            informPermissionsDenied(deniedPermissions);
+            informPermissionsGranted(grantedPermissions);
+        }
 
         pendingPermissionRequests.removeAll(asList(grantedPermissions));
         pendingPermissionRequests.removeAll(deniedPermissions.stripped());
@@ -90,38 +93,27 @@ class PermissionHandler {
     }
 
     private void informPermissionsDenied(DeniedPermissions deniedPermissions) {
-        ArrayList<PermissionManager.PermissionRequestListener> invalidatedListeners = new ArrayList<>();
-
         for (PermissionManager.PermissionRequestListener listener : requiredPermissionsMap.keySet()) {
             Set<String> permissionSet = requiredPermissionsMap.get(listener);
             Set<String> strippedDeniedPermissions = deniedPermissions.stripped();
-
             strippedDeniedPermissions.retainAll(permissionSet);
+
             if (!strippedDeniedPermissions.isEmpty()) {
                 listener.onPermissionDenied(deniedPermissions);
-                invalidatedListeners.add(listener);
+                requiredPermissionsMap.remove(listener);
             }
-        }
-
-        for (PermissionManager.PermissionRequestListener listener : invalidatedListeners) {
-            requiredPermissionsMap.remove(listener);
         }
     }
 
     private void informPermissionsGranted(String[] grantedPermissions) {
-        ArrayList<PermissionManager.PermissionRequestListener> invalidatedListeners = new ArrayList<>();
-
         for (PermissionManager.PermissionRequestListener listener : requiredPermissionsMap.keySet()) {
             Set<String> permissionSet = requiredPermissionsMap.get(listener);
             permissionSet.removeAll(asList(grantedPermissions));
+
             if (permissionSet.isEmpty()) {
                 listener.onPermissionGranted();
-                invalidatedListeners.add(listener);
+                requiredPermissionsMap.remove(listener);
             }
-        }
-
-        for (PermissionManager.PermissionRequestListener listener : invalidatedListeners) {
-            requiredPermissionsMap.remove(listener);
         }
     }
 
