@@ -14,7 +14,7 @@
   },
   "version": {
     "name": "{{VERSION_NUMBER}}",
-    "gpgSign": true
+    "gpgSign": false
   },
   "files": [
     {
