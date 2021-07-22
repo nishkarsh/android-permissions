@@ -1,5 +1,14 @@
-# android-permissions [ ![Download](https://api.bintray.com/packages/nishkarsh/maven/com.intentfilter%3Aandroid-permissions/images/download.svg) ](https://bintray.com/nishkarsh/maven/com.intentfilter%3Aandroid-permissions/_latestVersion) [![Build Status](https://travis-ci.org/nishkarsh/android-permissions.svg?branch=master)](https://travis-ci.org/nishkarsh/android-permissions)
+# android-permissions [![Build Status](https://travis-ci.org/nishkarsh/android-permissions.svg?branch=master)](https://travis-ci.org/nishkarsh/android-permissions)
 An android library that makes it really easy to deal with dynamic permissions. Based on the context, library automatically decides whether to show a dialog (in case app is in foreground) or a notification (in case permission is required by a background service).
+
+---
+**Important Note**
+
+The migration of artifacts to Maven Central is currently under progress. The newer builds would be published under group id `io.github.nishkarsh`.
+
+To include into the project, please select a particular published version and follow the instructions provided for the dependency management tool used: https://search.maven.org/artifact/io.github.nishkarsh/android-permissions
+
+---
 
 ### How does it work?
 - Get an instance of `PermissionManager` using `PermissionManager#getInstance()`
