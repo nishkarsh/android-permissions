@@ -49,13 +49,13 @@ For example, if you need to access location for scanning beacons and need to acc
 
 ### Including into project
 
-Gradle: `implementation 'com.intentfilter:android-permissions:2.0.54'`
+Gradle: `implementation 'io.github.nishkarsh:android-permissions:2.0.54'`
 
 Add android-permissions as dependency inside app module build.gradle under dependencies block. Your app level build.gradle should look like:
 
 ```
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.intentfilter:android-permissions:2.0.54'
+    implementation 'io.github.nishkarsh:android-permissions:2.0.54'
 }
 ```
