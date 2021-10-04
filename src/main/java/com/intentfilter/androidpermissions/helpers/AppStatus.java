@@ -15,6 +15,9 @@ public class AppStatus {
     public boolean isInForeground() {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+        if (runningAppProcesses == null) {
+            return false;
+        }
         for (ActivityManager.RunningAppProcessInfo process : runningAppProcesses) {
             if (process.processName.equals(context.getApplicationInfo().processName))
                 return process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;

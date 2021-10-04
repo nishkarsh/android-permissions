@@ -5,6 +5,7 @@
 
     <activity
         android:name=".PermissionsActivity"
+        android:exported="false"
         android:excludeFromRecents="true"
         android:theme="@style/AppTheme.Transparent" />
 
