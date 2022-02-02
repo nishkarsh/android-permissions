@@ -102,7 +102,11 @@ public class PermissionManager extends BroadcastReceiver {
     private PendingIntent notificationDismissIntent(Set<String> permissions) {
         Intent notificationDeleteIntent = new Intent(context, NotificationDismissReceiver.class);
         notificationDeleteIntent.putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[0]));
-        return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE, notificationDeleteIntent, FLAG_ONE_SHOT);
+        int flags = FLAG_ONE_SHOT;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            flags = FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE;
+        }
+        return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE, notificationDeleteIntent, flags);
     }
 
     private void logPermissionsResponse(String[] grantedPermissions, DeniedPermissions deniedPermissions) {

@@ -40,7 +40,11 @@ public class NotificationService {
     }
 
     public Notification buildNotification(String title, String message, Intent intent, PendingIntent deleteIntent) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent, FLAG_ONE_SHOT);
+        int flags = FLAG_ONE_SHOT;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            flags = PendingIntent.FLAG_IMMUTABLE | FLAG_ONE_SHOT;
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent, flags);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
