@@ -7,9 +7,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import androidx.core.app.NotificationCompat;
 
 import com.intentfilter.androidpermissions.R;
+import com.intentfilter.androidpermissions.helpers.VersionOrchestrator;
+
+import androidx.core.app.NotificationCompat;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -40,7 +42,8 @@ public class NotificationService {
     }
 
     public Notification buildNotification(String title, String message, Intent intent, PendingIntent deleteIntent) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent, FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent,
+                VersionOrchestrator.getImmutablePendingIntentFlags(FLAG_ONE_SHOT));
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)

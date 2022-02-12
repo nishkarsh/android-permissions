@@ -6,11 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.intentfilter.androidpermissions.helpers.Logger;
+import com.intentfilter.androidpermissions.helpers.VersionOrchestrator;
 import com.intentfilter.androidpermissions.models.DeniedPermissions;
 import com.intentfilter.androidpermissions.services.NotificationService;
 
@@ -20,6 +18,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -102,7 +104,8 @@ public class PermissionManager extends BroadcastReceiver {
     private PendingIntent notificationDismissIntent(Set<String> permissions) {
         Intent notificationDeleteIntent = new Intent(context, NotificationDismissReceiver.class);
         notificationDeleteIntent.putExtra(EXTRA_PERMISSIONS, permissions.toArray(new String[0]));
-        return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE, notificationDeleteIntent, FLAG_ONE_SHOT);
+        return PendingIntent.getBroadcast(context, PermissionsActivity.PERMISSIONS_REQUEST_CODE,
+                notificationDeleteIntent, VersionOrchestrator.getImmutablePendingIntentFlags(FLAG_ONE_SHOT));
     }
 
     private void logPermissionsResponse(String[] grantedPermissions, DeniedPermissions deniedPermissions) {
