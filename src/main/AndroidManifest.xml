@@ -4,6 +4,7 @@
   <application android:label="@string/app_name">
 
     <activity
+        android:exported="false"
         android:name=".PermissionsActivity"
         android:excludeFromRecents="true"
         android:theme="@style/AppTheme.Transparent" />
