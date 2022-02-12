@@ -88,11 +88,13 @@ public class PermissionManager extends BroadcastReceiver {
 
     void registerBroadcastReceiver(String action) {
         logger.i("Registering for PERMISSIONS_REQUEST broadcast");
+        //TODO Use LiveData or ReactiveStreams
         LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(action));
     }
 
     void unregisterBroadcastReceiver() {
         logger.i("Un-registering for PERMISSIONS_REQUEST broadcast");
+        //TODO Use LiveData or ReactiveStreams
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
     }
 

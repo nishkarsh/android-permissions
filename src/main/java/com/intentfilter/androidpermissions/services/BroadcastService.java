@@ -24,6 +24,7 @@ public class BroadcastService {
         Intent intent = new Intent(IntentAction.ACTION_PERMISSIONS_REQUEST);
         intent.putExtra(EXTRA_PERMISSIONS_GRANTED, grantedPermissions.toArray(new String[0]));
         intent.putExtra(EXTRA_PERMISSIONS_DENIED, Parcels.wrap(deniedPermissions));
+        //TODO Use LiveData or ReactiveStreams
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 

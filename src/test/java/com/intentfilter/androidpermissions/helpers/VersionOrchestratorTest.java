@@ -40,6 +40,7 @@ public class VersionOrchestratorTest {
         assertThat(pendingIntentFlags, is(FLAG_ONE_SHOT));
     }
 
+    //TODO Replace this with powermock implementation
     static void setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
 
