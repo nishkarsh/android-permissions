@@ -1,14 +1,8 @@
 # android-permissions [![Android Permissions CI](https://github.com/nishkarsh/android-permissions/actions/workflows/android.yml/badge.svg)](https://github.com/nishkarsh/android-permissions/actions/workflows/android.yml)
 An android library that makes it really easy to deal with dynamic permissions. Based on the context, library automatically decides whether to show a dialog (in case app is in foreground) or a notification (in case permission is required by a background service).
 
----
-**Important Note**
-
-The migration of artifacts to Maven Central is currently under progress. The newer builds would be published under group id `io.github.nishkarsh`.
-
-To include into the project, please select a particular published version and follow the instructions provided for the dependency management tool used: https://search.maven.org/artifact/io.github.nishkarsh/android-permissions
-
----
+> After migration of artifacts to Maven Central, the newer builds would be published under group id `io.github.nishkarsh`.
+> To include into the project, please select a particular published version and follow the instructions provided for the dependency management tool used: https://search.maven.org/artifact/io.github.nishkarsh/android-permissions
 
 ### How does it work?
 - Get an instance of `PermissionManager` using `PermissionManager#getInstance()`
