@@ -1,4 +1,4 @@
-# android-permissions [![Android Permissions CI](https://github.com/nishkarsh/android-permissions/actions/workflows/android.yml/badge.svg)](https://github.com/nishkarsh/android-permissions/actions/workflows/android.yml)
+# android-permissions [![Build & Publish](https://github.com/nishkarsh/android-permissions/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/nishkarsh/android-permissions/actions/workflows/build-and-release.yml)
 An android library that makes it really easy to deal with dynamic permissions. Based on the context, library automatically decides whether to show a dialog (in case app is in foreground) or a notification (in case permission is required by a background service).
 
 > After migration of artifacts to Maven Central, the newer builds would be published under group id `io.github.nishkarsh`.
