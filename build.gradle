@@ -21,13 +21,13 @@ static String makeVersionName(String majorVersion, String minorVersion, String p
 }
 
 def getVersionCode = {
-    def versionCode = System.getenv("TRAVIS_BUILD_NUMBER") ? System.getenv("TRAVIS_BUILD_NUMBER").toInteger() : 1
+    def versionCode = System.getenv("GITHUB_RUN_NUMBER") ? System.getenv("GITHUB_RUN_NUMBER").toInteger() : 1
     println "versionCode is set to $versionCode"
     return versionCode
 }
 
 def getVersionName = {
-    def versionName = makeVersionName(System.getenv("MAJOR_VERSION"), System.getenv("MINOR_VERSION"), System.getenv("TRAVIS_BUILD_NUMBER"))
+    def versionName = makeVersionName(System.getenv("MAJOR_VERSION"), System.getenv("MINOR_VERSION"), System.getenv("GITHUB_RUN_NUMBER"))
     println "versionName is set to $versionName"
     return versionName
 }
