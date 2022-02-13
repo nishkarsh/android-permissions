@@ -1,8 +1,6 @@
-name: Android Permissions CI
+name: PR Build
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
