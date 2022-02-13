@@ -34,5 +34,5 @@ jobs:
       - name: Upload Android Archive
         uses: actions/upload-artifact@v2.3.1
         with:
-          name: android-permissions-release-${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.GITHUB_RUN_NUMBER }}.aar
+          name: android-permissions-release-${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ github.run_number }}.aar
           path: build/outputs/aar/android-permissions-release.aar
