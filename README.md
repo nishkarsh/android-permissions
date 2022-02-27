@@ -13,7 +13,24 @@ An android library that makes it really easy to deal with dynamic permissions. B
 - If user taps on `Allow` for all the permissions asked by the app, `PermissionRequestListener#onPermissionGranted()` is called. This behaviour is per set of permissions asked.
 - If `Don't ask again` is checked by the user in the permission dialog displayed, `DeniedPermission#shouldShowRationale()`  returns false.
 
-Example:
+### Customising notification
+The notification shown to ask for permissions when the app is in background, could be customised using `NotificationSettings`. An instance of `NotificationSettings` can be created using `NotificationsSettings.Builder` to customise the title, message and/or a small icon for the notification.
+
+```
+PermissionManager instance = PermissionManager.getInstance(this);
+NotificationSettings.Builder builder = new NotificationSettings.Builder();
+
+NotificationSettings notificationSettings = builder
+                .withTitle(R.string.title_action_needed)
+                .withMessage(R.string.message_permission_required)
+                .withSmallIcon(R.drawable.app_icon).build();
+
+instance.setNotificationSettings(notificationSettings);
+```
+
+In the above example, the `R.string.title_action_needed`, `R.string.message_permission_required` and `R.drawable.app_icon` are the custom resources created in the project.
+
+### Checking for specific permissions
 ```
 PermissionManager permissionManager = PermissionManager.getInstance(context);
 permissionManager.checkPermissions(singleton(Manifest.permission.CAMERA), new PermissionManager.PermissionRequestListener() {
