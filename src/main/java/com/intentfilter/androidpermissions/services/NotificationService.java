@@ -11,6 +11,7 @@ import android.os.Build;
 import com.intentfilter.androidpermissions.R;
 import com.intentfilter.androidpermissions.helpers.VersionOrchestrator;
 
+import androidx.annotation.DrawableRes;
 import androidx.core.app.NotificationCompat;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
@@ -41,7 +42,8 @@ public class NotificationService {
         }
     }
 
-    public Notification buildNotification(String title, String message, Intent intent, PendingIntent deleteIntent) {
+    public Notification buildNotification(String title, String message, @DrawableRes int smallIconResId,
+                                          Intent intent, PendingIntent deleteIntent) {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent,
                 VersionOrchestrator.getImmutablePendingIntentFlags(FLAG_ONE_SHOT));
 
@@ -50,7 +52,7 @@ public class NotificationService {
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setSmallIcon(android.R.mipmap.sym_def_app_icon)
+                .setSmallIcon(smallIconResId)
                 .setContentIntent(pendingIntent);
 
         notificationBuilder.setDeleteIntent(deleteIntent);
