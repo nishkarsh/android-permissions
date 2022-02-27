@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
@@ -36,11 +35,13 @@ public class PermissionManager extends BroadcastReceiver {
     private final Logger logger;
     private static PermissionManager permissionManager;
     private final PermissionHandler permissionHandler;
+    private NotificationSettings notificationSettings;
 
     private PermissionManager(Context context) {
         this.context = context;
         this.permissionHandler = new PermissionHandler(this, context);
         this.logger = Logger.loggerFor(PermissionManager.class);
+        this.notificationSettings = NotificationSettings.getDefault();
     }
 
     public static PermissionManager getInstance(Context context) {
@@ -52,6 +53,10 @@ public class PermissionManager extends BroadcastReceiver {
 
     public void checkPermissions(@NonNull Collection<String> permissions, @NonNull final PermissionRequestListener listener) {
         permissionHandler.checkPermissions(permissions, listener);
+    }
+
+    public void setNotificationSettings(NotificationSettings notificationSettings) {
+        this.notificationSettings = notificationSettings;
     }
 
     @Override
@@ -67,10 +72,15 @@ public class PermissionManager extends BroadcastReceiver {
         context.startActivity(intent);
     }
 
-    void showPermissionNotification(Set<String> permissions, @StringRes int titleResId, @StringRes int messageResId) {
+    void showPermissionNotification(Set<String> permissions) {
         NotificationService notificationService = new NotificationService(context);
+        int titleResId = this.notificationSettings.getTitleResId();
+        int messageResId = this.notificationSettings.getMessageResId();
+        int smallIconResId = this.notificationSettings.getSmallIconResId();
+
         Notification notification = notificationService.buildNotification(context.getString(titleResId),
-                context.getString(messageResId), permissionActivityIntent(permissions), notificationDismissIntent(permissions));
+                context.getString(messageResId), smallIconResId, permissionActivityIntent(permissions),
+                notificationDismissIntent(permissions));
         notificationService.notify(permissions.toString(), permissions.hashCode(), notification);
     }
 

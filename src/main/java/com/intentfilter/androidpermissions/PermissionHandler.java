@@ -74,8 +74,7 @@ class PermissionHandler {
         if (appStatus.isInForeground()) {
             manager.startPermissionActivity(permissions);
         } else {
-            manager.showPermissionNotification(permissions, R.string.title_permission_required,
-                    R.string.message_permission_required);
+            manager.showPermissionNotification(permissions);
         }
     }
 

@@ -28,7 +28,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -80,7 +79,7 @@ public class PermissionHandlerTest {
 
         permissionHandler.checkPermissions(asList(PERMISSION_1, PERMISSION_2), requestListener);
 
-        verify(manager, never()).showPermissionNotification(ArgumentMatchers.<String>anySet(), anyInt(), anyInt());
+        verify(manager, never()).showPermissionNotification(ArgumentMatchers.<String>anySet());
         verify(manager, never()).startPermissionActivity(ArgumentMatchers.<String>anySet());
     }
 
@@ -137,7 +136,7 @@ public class PermissionHandlerTest {
         permissionHandler.checkPermissions(permissions, requestListener);
 
         verify(manager).startPermissionActivity(new HashSet<>(permissions));
-        verify(manager, never()).showPermissionNotification(ArgumentMatchers.<String>anySet(), anyInt(), anyInt());
+        verify(manager, never()).showPermissionNotification(ArgumentMatchers.<String>anySet());
     }
 
     @Test
@@ -147,7 +146,7 @@ public class PermissionHandlerTest {
 
         permissionHandler.checkPermissions(permissions, requestListener);
 
-        verify(manager).showPermissionNotification(new HashSet<>(permissions), R.string.title_permission_required, R.string.message_permission_required);
+        verify(manager).showPermissionNotification(new HashSet<>(permissions));
         verify(manager, never()).startPermissionActivity(ArgumentMatchers.<String>anySet());
     }
 
