@@ -31,8 +31,15 @@ jobs:
         with:
           name: reports
           path: build/report
-      - name: Upload Android Archive
+      - name: Publish Android archive as an artifact
         uses: actions/upload-artifact@v2.3.1
         with:
-          name: android-permissions-release-${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ github.run_number }}.aar
+          name: android-permissions-${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ github.run_number }}.aar
           path: build/outputs/aar/android-permissions-release.aar
+      - name: Generate POM for Publishing
+        run: ./gradlew generatePomFileForAndroidPermissionsPublication
+      - name: Publish generated POM as an artifact
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: android-permissions-${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ github.run_number }}.pom
+          path: build/publications/androidPermissions/pom-default.xml
