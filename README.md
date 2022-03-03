@@ -67,6 +67,6 @@ Add android-permissions as dependency inside app module build.gradle under depen
 ```
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'io.github.nishkarsh:android-permissions:2.0.54'
+    implementation 'io.github.nishkarsh:android-permissions:2.1.6'
 }
 ```
