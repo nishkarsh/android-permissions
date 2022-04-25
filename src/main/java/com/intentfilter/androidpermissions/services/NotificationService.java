@@ -11,6 +11,7 @@ import android.os.Build;
 import com.intentfilter.androidpermissions.R;
 import com.intentfilter.androidpermissions.helpers.VersionOrchestrator;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.core.app.NotificationCompat;
 
@@ -43,7 +44,7 @@ public class NotificationService {
     }
 
     public Notification buildNotification(String title, String message, @DrawableRes int smallIconResId,
-                                          Intent intent, PendingIntent deleteIntent) {
+                                          @ColorInt int color, Intent intent, PendingIntent deleteIntent) {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, message.hashCode(), intent,
                 VersionOrchestrator.getImmutablePendingIntentFlags(FLAG_ONE_SHOT));
 
@@ -53,6 +54,7 @@ public class NotificationService {
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSmallIcon(smallIconResId)
+                .setColor(color)
                 .setContentIntent(pendingIntent);
 
         notificationBuilder.setDeleteIntent(deleteIntent);
