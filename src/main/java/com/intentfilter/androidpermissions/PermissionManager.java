@@ -77,9 +77,10 @@ public class PermissionManager extends BroadcastReceiver {
         int titleResId = this.notificationSettings.getTitleResId();
         int messageResId = this.notificationSettings.getMessageResId();
         int smallIconResId = this.notificationSettings.getSmallIconResId();
+        int color = this.notificationSettings.getColor();
 
         Notification notification = notificationService.buildNotification(context.getString(titleResId),
-                context.getString(messageResId), smallIconResId, permissionActivityIntent(permissions),
+                context.getString(messageResId), smallIconResId, color, permissionActivityIntent(permissions),
                 notificationDismissIntent(permissions));
         notificationService.notify(permissions.toString(), permissions.hashCode(), notification);
     }
