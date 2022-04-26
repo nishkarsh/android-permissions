@@ -71,8 +71,8 @@ public class NotificationSettings {
             return this;
         }
 
-        public Builder withColor(@ColorInt int colorResId) {
-            this.notificationSettings.color = colorResId;
+        public Builder withColor(@ColorInt int color) {
+            this.notificationSettings.color = color;
             return this;
         }
 
