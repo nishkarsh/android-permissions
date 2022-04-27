@@ -5,8 +5,6 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import android.graphics.Color;
-
 public class NotificationSettingsTest {
     @Test
     public void shouldCreateNotificationSettingsWithProperParams() {
@@ -14,13 +12,13 @@ public class NotificationSettingsTest {
         NotificationSettings settings = builder.withTitle(R.string.notification_channel_name)
                 .withMessage(R.string.message_permission_required)
                 .withSmallIcon(android.R.drawable.ic_dialog_info)
-                .withColor(Color.CYAN)
+                .withColorResId(android.R.color.holo_blue_bright)
                 .build();
 
         assertThat(settings.getTitleResId(), is(R.string.notification_channel_name));
         assertThat(settings.getMessageResId(), is(R.string.message_permission_required));
         assertThat(settings.getSmallIconResId(), is(android.R.drawable.ic_dialog_info));
-        assertThat(settings.getColor(), is(Color.CYAN));
+        assertThat(settings.getColorResId(), is(android.R.color.holo_blue_bright));
     }
 
     @Test
@@ -30,6 +28,6 @@ public class NotificationSettingsTest {
         assertThat(settings.getTitleResId(), is(R.string.title_permission_required));
         assertThat(settings.getMessageResId(), is(R.string.message_permission_required));
         assertThat(settings.getSmallIconResId(), is(android.R.mipmap.sym_def_app_icon));
-        assertThat(settings.getColor(), is(Color.TRANSPARENT));
+        assertThat(settings.getColorResId(), is(android.R.color.transparent));
     }
 }
