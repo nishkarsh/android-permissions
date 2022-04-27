@@ -1,9 +1,8 @@
 package com.intentfilter.androidpermissions;
 
-import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
-import androidx.core.app.NotificationCompat;
 
 public class NotificationSettings {
     @StringRes
@@ -12,21 +11,21 @@ public class NotificationSettings {
     private int messageResId;
     @DrawableRes
     private int smallIconResId;
-    @ColorInt
-    private int color;
+    @ColorRes
+    private int colorResId;
 
     private NotificationSettings(@StringRes int titleResId, @StringRes int messageResId,
-                                 @DrawableRes int smallIconResId, @ColorInt int color) {
+                                 @DrawableRes int smallIconResId, @ColorRes int colorResId) {
         this.titleResId = titleResId;
         this.messageResId = messageResId;
         this.smallIconResId = smallIconResId;
-        this.color = color;
+        this.colorResId = colorResId;
     }
 
     static NotificationSettings getDefault() {
         return new NotificationSettings(R.string.title_permission_required,
                 R.string.message_permission_required,
-                android.R.mipmap.sym_def_app_icon, NotificationCompat.COLOR_DEFAULT);
+                android.R.mipmap.sym_def_app_icon, android.R.color.transparent);
     }
 
     @StringRes
@@ -44,9 +43,9 @@ public class NotificationSettings {
         return smallIconResId;
     }
 
-    @ColorInt
-    public int getColor() {
-        return color;
+    @ColorRes
+    public int getColorResId() {
+        return colorResId;
     }
 
     public static class Builder {
@@ -71,8 +70,8 @@ public class NotificationSettings {
             return this;
         }
 
-        public Builder withColor(@ColorInt int color) {
-            this.notificationSettings.color = color;
+        public Builder withColorResId(@ColorRes int colorResId) {
+            this.notificationSettings.colorResId = colorResId;
             return this;
         }
 
